@@ -24,6 +24,8 @@ costs that much, you only try a few. So I made trying one more idea cheap.
 <tr>
 <td valign="top">
 
+A variant's settings file, shortened:
+
 ```json
 {
   "label": "Comeback",
