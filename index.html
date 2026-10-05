@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Tile Duel: an ad creative production line</title>
+<meta name="description" content="One settings file in; a playable ad for four networks, twelve stills and a video out, in under a minute.">
+<meta property="og:title" content="One settings file in. A full set of ad creatives out.">
+<meta property="og:description" content="A small production line for mobile game ads. Play the ad, watch the videos, see what is checked before anything goes out.">
+<meta property="og:image" content="https://omeraydin0.github.io/word-tile-playable/docs/media/variants.jpg">
+<style>
+:root{--ink:#10214a;--soft:#52628a;--line:#dbe4f5;--paper:#f5f8ff;--card:#fff;--blue:#1d66d6;--deep:#0b2c66;--sun:#ffc93c;--good:#1f9d55;--bad:#d6345f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--blue)}
+img,video{max-width:100%;display:block}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+nav b{font-size:18px}
+nav a{font-weight:600;text-decoration:none}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.12;margin:0 0 16px;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:clamp(24px,3.4vw,32px);line-height:1.2;margin:0 0 10px;letter-spacing:-.01em}
+h3{font-size:18px;margin:0 0 4px}
+p{margin:0 0 14px}
+.lead{font-size:19px;color:var(--soft);max-width:34em}
+section{padding:54px 0;border-top:1px solid var(--line)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:22px 0 60px;border:0}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.btn{display:inline-block;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:2px solid var(--blue);color:var(--blue)}
+.btn.main{background:var(--blue);color:#fff}
+.btn:focus-visible,.chip:focus-visible,a:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.phone{width:min(100%,320px);aspect-ratio:9/18.5;margin:0 auto;border-radius:34px;border:9px solid #0a1634;background:#0a1634;overflow:hidden;box-shadow:0 24px 50px rgba(11,44,102,.28)}
+.phone iframe{width:100%;height:100%;border:0;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 8px}
+.chip{font:inherit;font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--deep);border-color:var(--deep);color:#fff}
+.caption{text-align:center;font-size:14px;color:var(--soft);min-height:3.2em;max-width:22em;margin:0 auto}
+.caption b{color:var(--ink)}
+.inout{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;align-items:start;margin-top:22px}
+pre{margin:0;background:#0d1b3d;color:#dbe7ff;border-radius:14px;padding:16px 18px;font:13.5px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-x:auto}
+pre i{color:#ffd66b;font-style:normal}
+.outs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.out{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.out b{display:block;font-size:22px}
+.out span{font-size:14.5px;color:var(--soft)}
+figure{margin:22px 0 0}
+figure img{border-radius:14px;border:1px solid var(--line)}
+figcaption{font-size:14px;color:var(--soft);margin-top:8px}
+.videos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+.vid{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.vid video{width:100%;aspect-ratio:9/16;background:#0a1634}
+.vid div{padding:12px 14px 14px}
+.vid p{font-size:14.5px;color:var(--soft);margin:0}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+.check{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.check p{font-size:15.5px;color:var(--soft);margin:0}
+.check small{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.caught{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:center;grid-column:1/-1}
+.caught img{border-radius:10px;border:1px solid var(--line)}
+.tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;padding:2px 8px;border-radius:6px;background:#ffe3ea;color:var(--bad)}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+.num{background:var(--deep);color:#fff;border-radius:14px;padding:16px}
+.num b{display:block;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.num span{font-size:14px;color:#c5d6f7}
+table{border-collapse:collapse;width:100%;margin-top:18px;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line);font-size:15.5px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--soft)}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.todo{background:#fff8e1;border:1px solid #f1dfa0;border-radius:14px;padding:18px 20px;margin-top:20px}
+.todo ul{margin:8px 0 0;padding-left:20px}
+footer{padding:34px 0 60px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
+footer a{font-weight:600}
+@media (max-width:820px){
+  .hero,.inout{grid-template-columns:1fr}
+  .videos{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nums{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .checks{grid-template-columns:1fr}
+  section{padding:40px 0}
+}
+@media (max-width:460px){
+  .outs{grid-template-columns:1fr}
+  .caught{grid-template-columns:96px minmax(0,1fr)}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <b>Word Tile Duel</b>
+  <a href="https://github.com/omerAydin0/word-tile-playable">GitHub</a>
+</nav>
+
+<header class="hero">
+  <div>
+    <h1>One settings file in. A full set of ad creatives out.</h1>
+    <p class="lead">A small production line for mobile game ads. It turns one short file into a playable for four ad networks, twelve stills and a video, in under a minute. Two AI agents write the variants and review what comes out.</p>
+    <div class="btns">
+      <a class="btn main" href="#play">Play the ad</a>
+      <a class="btn" href="creatives/index.html">See a full batch</a>
+    </div>
+  </div>
+  <div id="play">
+    <div class="phone"><iframe id="ad" title="The playable ad" src="dist/duel.html" allow="autoplay"></iframe></div>
+    <div class="chips" id="chips"></div>
+    <p class="caption" id="caption"></p>
+    <p class="caption"><a id="full" href="dist/duel.html">Open it full screen</a> · sound starts on the first tap</p>
+  </div>
+</header>
+
+<section>
+  <h2>Why</h2>
+  <p class="lead">I looked at the most-shown "tile" game ads in Meta's Ad Library. Most were 30-second videos saying one of two things: "only 1% can beat this" or "relax".</p>
+  <p>I don't think that is for lack of ideas. One idea means a playable, a video, a still for every placement and a package for every network: about twenty files. When an idea costs that much, you try few of them. So I made trying one more idea cheap.</p>
+</section>
+
+<section>
+  <h2>What goes in, what comes out</h2>
+  <div class="inout">
+    <pre>{
+  "label": "Comeback",
+  "headline": <i>"EMMA IS AHEAD. CATCH UP!"</i>,
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": <i>"sunset"</i>,
+  "botStartScore": <i>30</i>
+}</pre>
+    <div class="outs">
+      <div class="out"><b>4 playables</b><span>Meta, Google, MRAID networks and a preview. Too big for a network and the build fails.</span></div>
+      <div class="out"><b>12 stills</b><span>Three moments of the ad in 9:16, 4:5, 1:1 and 1.91:1.</span></div>
+      <div class="out"><b>1 video</b><span>The ad played start to finish, with sound.</span></div>
+      <div class="out"><b>1 record</b><span>What was made, from which settings, and how long it took.</span></div>
+    </div>
+  </div>
+  <figure>
+    <img src="docs/media/sizes.jpg" alt="The same moment of one variant in four placement sizes" loading="lazy">
+    <figcaption>One moment, four placements. Nobody resized anything by hand.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Six variants so far</h2>
+  <p class="lead">Three I wrote myself. Three were written by an agent from a one-page brief.</p>
+  <div class="videos" id="videos"></div>
+</section>
+
+<section>
+  <h2>Checked before anything goes out</h2>
+  <div class="checks">
+    <div class="check"><small>Code</small><h3>Is the copy true?</h3><p>No percentages, no "best game", no "she's ahead" unless she really starts ahead. "Only 1%" would be refused.</p></div>
+    <div class="check"><small>Simulation</small><h3>Can the viewer win?</h3><p>The ad plays itself 3,000 times. Someone who follows the tutorial must win every time.</p></div>
+    <div class="check"><small>Agent</small><h3>Does it read at every size?</h3><p>A reviewer agent opens the stills and answers PASS or REVISE, with reasons.</p></div>
+    <div class="check"><small>Code</small><h3>Does it fit every screen?</h3><p>Laid out on 23 screen sizes. It fails if anything overlaps, runs off the screen or is too small to tap.</p></div>
+    <div class="check caught">
+      <img src="docs/probes/harbor-hook-9x16.jpg" alt="A variant with a pale headline on a pale band" loading="lazy">
+      <div><span class="tag">REJECTED</span><h3 style="margin-top:6px">Can the reviewer say no?</h3><p>It passed the first three variants, which told me little. So I broke two on purpose and showed them to it without saying so. This one has a headline you can barely read. It rejected both, for the right reasons.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>When the game changes</h2>
+  <p class="lead">The game team changes the interface and every creative you have is out of date.</p>
+  <p>I went through that four times in one evening, comparing my ad with the real game and fixing what was different. Each time one command remade everything: 24 playables, 72 stills, 6 videos, in a few minutes.</p>
+  <div class="nums">
+    <div class="num"><b>&lt; 1 min</b><span>to produce one variant</span></div>
+    <div class="num"><b>102</b><span>files in a batch of six</span></div>
+    <div class="num"><b>23</b><span>screen sizes checked</span></div>
+    <div class="num"><b>85</b><span>automated tests</span></div>
+  </div>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Share of games won by a player who…</th><th>Duel</th><th>Comeback</th><th>Relax</th></tr>
+    <tr><td>follows the tutorial</td><td>100%</td><td>100%</td><td>100%</td></tr>
+    <tr><td>plays any common word</td><td>83%</td><td>24%</td><td>83%</td></tr>
+    <tr><td>does as little as possible</td><td>0%</td><td>0%</td><td>0%</td></tr>
+  </table>
+  </div>
+  <div class="todo">
+    <b>Not done yet</b>
+    <ul>
+      <li>None of this has run on an ad network. There are no click, install or cost numbers.</li>
+      <li>The first test I would run: the night look and the short game, each against the standard ad.</li>
+      <li>The builds follow each network's published rules but haven't been through their test tools.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p><a href="https://github.com/omerAydin0/word-tile-playable">Code and notes on GitHub</a> · <a href="creatives/index.html">The full batch</a> · <a href="https://github.com/omerAydin0/word-tile-playable/blob/main/creatives/REPORT.md">Batch report</a></p>
+  <p>The game in the ad is modelled on Word Tiles GO. The name, the art and the music are my own; this is not that game's ad.</p>
+</footer>
+
+</div>
+<script>
+const VARIANTS = [
+  { id: 'duel', label: 'Duel', headline: 'CAN YOU BEAT EMMA?', idea: 'A direct challenge. The tutorial shows every word.', by: 'mine' },
+  { id: 'comeback', label: 'Comeback', headline: 'EMMA IS AHEAD. CATCH UP!', idea: 'The opponent starts 30 points up.', by: 'mine' },
+  { id: 'relax', label: 'Relax', headline: 'RELAX. FIND A WORD.', idea: 'No tutorial unless the player waits.', by: 'mine' },
+  { id: 'two-words', label: 'Two Words', headline: 'TWO WORDS EACH. GO!', idea: 'A shorter game, and the headline says so.', by: 'agent' },
+  { id: 'instruction', label: 'Instruction', headline: 'TAP LETTERS. SPELL A WORD.', idea: 'No question, only what to do.', by: 'agent' },
+  { id: 'night', label: 'Night', headline: 'LIGHTS OUT. WORDS ON.', idea: 'Same ad, dark colours the agent chose.', by: 'agent' },
+];
+const ad = document.getElementById('ad');
+const chips = document.getElementById('chips');
+const caption = document.getElementById('caption');
+const full = document.getElementById('full');
+function show(v) {
+  ad.src = 'dist/' + v.id + '.html';
+  full.href = 'dist/' + v.id + '.html';
+  caption.innerHTML = '<b>' + v.headline + '</b><br>' + v.idea;
+  chips.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === v.id)));
+}
+VARIANTS.forEach((v) => {
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.type = 'button';
+  b.dataset.id = v.id;
+  b.textContent = v.label;
+  b.addEventListener('click', () => show(v));
+  chips.appendChild(b);
+});
+caption.innerHTML = '<b>' + VARIANTS[0].headline + '</b><br>' + VARIANTS[0].idea;
+chips.firstChild.setAttribute('aria-pressed', 'true');
+
+const videos = document.getElementById('videos');
+VARIANTS.forEach((v) => {
+  const card = document.createElement('div');
+  card.className = 'vid';
+  card.innerHTML = '<video controls playsinline preload="none" poster="docs/media/posters/' + v.id + '.jpg" src="creatives/' + v.id + '/video.mp4"></video>'
+    + '<div><h3>' + v.label + '</h3><p>' + v.idea + (v.by === 'agent' ? ' <em>Written by the agent.</em>' : '') + '</p></div>';
+  videos.appendChild(card);
+});
+// one video at a time
+videos.addEventListener('play', (e) => {
+  videos.querySelectorAll('video').forEach((other) => { if (other !== e.target) other.pause(); });
+}, true);
+</script>
+</body>
+</html>

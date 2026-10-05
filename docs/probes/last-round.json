@@ -1,0 +1,12 @@
+{
+  "label": "Last Round",
+  "hook": "The ad opens on the deciding round, so the first word the viewer spells settles the duel.",
+  "brand": "WORD TILE DUEL",
+  "headline": "LAST ROUND. MAKE IT COUNT!",
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": "beach",
+  "rounds": 3,
+  "tutorial": true,
+  "botSkill": 0.15
+}

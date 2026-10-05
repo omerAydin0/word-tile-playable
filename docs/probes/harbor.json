@@ -1,0 +1,23 @@
+{
+  "label": "Harbor",
+  "hook": "A pale morning look, to see whether a softer board feels more inviting than the bright beach.",
+  "brand": "WORD TILE DUEL",
+  "headline": "A CALM MORNING OF WORDS",
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": {
+    "base": "beach",
+    "sky": [
+      "#cfe6fb",
+      "#dcefff",
+      "#eaf6ff",
+      "#f6fbff"
+    ],
+    "strip": "#e6f1fb",
+    "panel": "#9fc3e6",
+    "accent": "#ffd84d"
+  },
+  "rounds": 3,
+  "tutorial": true,
+  "botSkill": 0.15
+}

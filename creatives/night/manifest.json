@@ -1,0 +1,132 @@
+{
+  "name": "night",
+  "ok": true,
+  "label": "Night",
+  "hook": "A dark shore that stands out in a bright feed, with the same duel and the hand showing every word.",
+  "headline": "LIGHTS OUT. WORDS ON.",
+  "cta": "PLAY NOW",
+  "settings": {
+    "brand": "WORD TILE DUEL",
+    "headline": "LIGHTS OUT. WORDS ON.",
+    "ctaLabel": "PLAY NOW",
+    "opponentName": "EMMA",
+    "theme": {
+      "base": "lagoon",
+      "sky": [
+        "#0b1030",
+        "#1a1f4d",
+        "#2c2f6b",
+        "#45407f"
+      ],
+      "sea": [
+        "#1b2a5e",
+        "#142049",
+        "#0e1838"
+      ],
+      "sand": [
+        "#3b3358",
+        "#2f2848",
+        "#262040"
+      ],
+      "palm": [
+        "#0a1424",
+        "#1b2c4a"
+      ],
+      "cloud": "#3a3f78",
+      "glow": "#6b6fc0",
+      "strip": "#0a0d24",
+      "panel": "#12163a",
+      "accent": "#ffd45c"
+    },
+    "tutorial": true,
+    "botSkill": 0.15
+  },
+  "playables": {
+    "preview": {
+      "file": "playable/preview.html",
+      "kb": 1056
+    },
+    "facebook": {
+      "file": "playable/facebook.html",
+      "kb": 1056
+    },
+    "google": {
+      "file": "playable/google.zip",
+      "kb": 320
+    },
+    "mraid": {
+      "file": "playable/mraid.html",
+      "kb": 1056
+    }
+  },
+  "stills": [
+    "hook-9x16.jpg",
+    "word-9x16.jpg",
+    "end-9x16.jpg",
+    "hook-4x5.jpg",
+    "word-4x5.jpg",
+    "end-4x5.jpg",
+    "hook-1x1.jpg",
+    "word-1x1.jpg",
+    "end-1x1.jpg",
+    "hook-191x100.jpg",
+    "word-191x100.jpg",
+    "end-191x100.jpg"
+  ],
+  "video": {
+    "file": "video.mp4",
+    "seconds": 30.8,
+    "frames": 925,
+    "kb": 3185
+  },
+  "script": "follow",
+  "moments": {
+    "hook": 4.6,
+    "word": 6.55,
+    "end": 28.3
+  },
+  "result_of_script": "win",
+  "words_in_script": [
+    "HEART",
+    "NOT",
+    "EASY",
+    "TOP",
+    "YOU"
+  ],
+  "outcomes": {
+    "hint": {
+      "win": 1.0,
+      "tie": 0.0,
+      "lose": 0.0,
+      "cleared": 1.0,
+      "you": 70,
+      "opponent": 16,
+      "words": 5
+    },
+    "casual": {
+      "win": 0.828,
+      "tie": 0.042,
+      "lose": 0.13,
+      "cleared": 0.38,
+      "you": 42,
+      "opponent": 27,
+      "words": 5.7
+    },
+    "short": {
+      "win": 0.0,
+      "tie": 0.0,
+      "lose": 1.0,
+      "cleared": 0.0,
+      "you": 26,
+      "opponent": 28,
+      "words": 6
+    }
+  },
+  "seconds": {
+    "playable": 1.89,
+    "simulation": 1.91,
+    "stills": 2.7,
+    "video": 20.64,
+    "total": 27.14
+  }
+}

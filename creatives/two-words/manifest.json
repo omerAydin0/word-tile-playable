@@ -1,0 +1,111 @@
+{
+  "name": "two-words",
+  "ok": true,
+  "label": "Two Words",
+  "hook": "A duel capped at two words each, so the viewer sees at once that the whole ad is short.",
+  "headline": "TWO WORDS EACH. GO!",
+  "cta": "PLAY NOW",
+  "settings": {
+    "brand": "WORD TILE DUEL",
+    "headline": "TWO WORDS EACH. GO!",
+    "ctaLabel": "PLAY NOW",
+    "opponentName": "EMMA",
+    "theme": "beach",
+    "rounds": 2,
+    "tutorial": true,
+    "botSkill": 0.15,
+    "endTitles": {
+      "win": "QUICK WIN!",
+      "lose": "SO CLOSE!",
+      "tie": "IT'S A TIE!"
+    },
+    "endSubtitle": "A longer duel is waiting"
+  },
+  "playables": {
+    "preview": {
+      "file": "playable/preview.html",
+      "kb": 1056
+    },
+    "facebook": {
+      "file": "playable/facebook.html",
+      "kb": 1056
+    },
+    "google": {
+      "file": "playable/google.zip",
+      "kb": 320
+    },
+    "mraid": {
+      "file": "playable/mraid.html",
+      "kb": 1056
+    }
+  },
+  "stills": [
+    "hook-9x16.jpg",
+    "word-9x16.jpg",
+    "end-9x16.jpg",
+    "hook-4x5.jpg",
+    "word-4x5.jpg",
+    "end-4x5.jpg",
+    "hook-1x1.jpg",
+    "word-1x1.jpg",
+    "end-1x1.jpg",
+    "hook-191x100.jpg",
+    "word-191x100.jpg",
+    "end-191x100.jpg"
+  ],
+  "video": {
+    "file": "video.mp4",
+    "seconds": 26.1,
+    "frames": 784,
+    "kb": 2939
+  },
+  "script": "follow",
+  "moments": {
+    "hook": 4.6,
+    "word": 6.55,
+    "end": 23.6
+  },
+  "result_of_script": "win",
+  "words_in_script": [
+    "HEART",
+    "NOT",
+    "EASY",
+    "TOP"
+  ],
+  "outcomes": {
+    "hint": {
+      "win": 1.0,
+      "tie": 0.0,
+      "lose": 0.0,
+      "cleared": 0.0,
+      "you": 56,
+      "opponent": 16,
+      "words": 4
+    },
+    "casual": {
+      "win": 0.827,
+      "tie": 0.063,
+      "lose": 0.11,
+      "cleared": 0.0,
+      "you": 29,
+      "opponent": 20,
+      "words": 4
+    },
+    "short": {
+      "win": 0.0,
+      "tie": 0.0,
+      "lose": 1.0,
+      "cleared": 0.0,
+      "you": 12,
+      "opponent": 18,
+      "words": 4
+    }
+  },
+  "seconds": {
+    "playable": 1.96,
+    "simulation": 1.48,
+    "stills": 2.62,
+    "video": 17.42,
+    "total": 23.48
+  }
+}

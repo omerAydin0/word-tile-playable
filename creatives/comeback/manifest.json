@@ -1,0 +1,111 @@
+{
+  "name": "comeback",
+  "ok": true,
+  "label": "Comeback",
+  "hook": "The opponent starts ahead: the player has something to fix from the first second.",
+  "headline": "EMMA IS AHEAD. CATCH UP!",
+  "cta": "PLAY NOW",
+  "settings": {
+    "brand": "WORD TILE DUEL",
+    "headline": "EMMA IS AHEAD. CATCH UP!",
+    "ctaLabel": "PLAY NOW",
+    "opponentName": "EMMA",
+    "theme": "sunset",
+    "tutorial": true,
+    "botSkill": 0.15,
+    "botStartScore": 30,
+    "endTitles": {
+      "win": "WHAT A COMEBACK!",
+      "lose": "SO CLOSE!",
+      "tie": "IT'S A TIE!"
+    }
+  },
+  "playables": {
+    "preview": {
+      "file": "playable/preview.html",
+      "kb": 1056
+    },
+    "facebook": {
+      "file": "playable/facebook.html",
+      "kb": 1056
+    },
+    "google": {
+      "file": "playable/google.zip",
+      "kb": 320
+    },
+    "mraid": {
+      "file": "playable/mraid.html",
+      "kb": 1056
+    }
+  },
+  "stills": [
+    "hook-9x16.jpg",
+    "word-9x16.jpg",
+    "end-9x16.jpg",
+    "hook-4x5.jpg",
+    "word-4x5.jpg",
+    "end-4x5.jpg",
+    "hook-1x1.jpg",
+    "word-1x1.jpg",
+    "end-1x1.jpg",
+    "hook-191x100.jpg",
+    "word-191x100.jpg",
+    "end-191x100.jpg"
+  ],
+  "video": {
+    "file": "video.mp4",
+    "seconds": 30.8,
+    "frames": 925,
+    "kb": 3310
+  },
+  "script": "follow",
+  "moments": {
+    "hook": 4.6,
+    "word": 6.55,
+    "end": 28.3
+  },
+  "result_of_script": "win",
+  "words_in_script": [
+    "HEART",
+    "NOT",
+    "EASY",
+    "TOP",
+    "YOU"
+  ],
+  "outcomes": {
+    "hint": {
+      "win": 1.0,
+      "tie": 0.0,
+      "lose": 0.0,
+      "cleared": 1.0,
+      "you": 70,
+      "opponent": 46,
+      "words": 5
+    },
+    "casual": {
+      "win": 0.242,
+      "tie": 0.01,
+      "lose": 0.748,
+      "cleared": 0.383,
+      "you": 43,
+      "opponent": 53,
+      "words": 5.7
+    },
+    "short": {
+      "win": 0.0,
+      "tie": 0.0,
+      "lose": 1.0,
+      "cleared": 0.0,
+      "you": 26,
+      "opponent": 58,
+      "words": 6
+    }
+  },
+  "seconds": {
+    "playable": 1.57,
+    "simulation": 2.3,
+    "stills": 2.66,
+    "video": 21.29,
+    "total": 27.82
+  }
+}

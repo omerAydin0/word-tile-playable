@@ -1,0 +1,17 @@
+{
+  "label": "Comeback",
+  "hook": "The opponent starts ahead: the player has something to fix from the first second.",
+  "brand": "WORD TILE DUEL",
+  "headline": "EMMA IS AHEAD. CATCH UP!",
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": "sunset",
+  "tutorial": true,
+  "botSkill": 0.15,
+  "botStartScore": 30,
+  "endTitles": {
+    "win": "WHAT A COMEBACK!",
+    "lose": "SO CLOSE!",
+    "tie": "IT'S A TIE!"
+  }
+}

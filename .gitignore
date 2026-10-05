@@ -1,0 +1,6 @@
+__pycache__/
+.pytest_cache/
+# network builds are made on demand; the preview builds in dist/ are kept so the ad can be opened straight from the repo
+dist/*/
+docs/GUNLUK.md
+docs/HIKAYE.md

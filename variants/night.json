@@ -1,0 +1,22 @@
+{
+  "label": "Night",
+  "hook": "A dark shore that stands out in a bright feed, with the same duel and the hand showing every word.",
+  "brand": "WORD TILE DUEL",
+  "headline": "LIGHTS OUT. WORDS ON.",
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": {
+    "base": "lagoon",
+    "sky": ["#0b1030", "#1a1f4d", "#2c2f6b", "#45407f"],
+    "sea": ["#1b2a5e", "#142049", "#0e1838"],
+    "sand": ["#3b3358", "#2f2848", "#262040"],
+    "palm": ["#0a1424", "#1b2c4a"],
+    "cloud": "#3a3f78",
+    "glow": "#6b6fc0",
+    "strip": "#0a0d24",
+    "panel": "#12163a",
+    "accent": "#ffd45c"
+  },
+  "tutorial": true,
+  "botSkill": 0.15
+}

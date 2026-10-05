@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+*.woff2 binary
+*.zip binary
+vendor/*.js -diff linguist-vendored
+dist/*.html -diff linguist-generated

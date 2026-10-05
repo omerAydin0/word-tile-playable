@@ -1,0 +1,11 @@
+{
+  "label": "Duel",
+  "hook": "A direct challenge, and the hand walks through the first word.",
+  "brand": "WORD TILE DUEL",
+  "headline": "CAN YOU BEAT EMMA?",
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": "beach",
+  "tutorial": true,
+  "botSkill": 0.15
+}

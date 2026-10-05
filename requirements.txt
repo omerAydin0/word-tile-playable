@@ -1,0 +1,5 @@
+# The ad itself needs nothing: build.py uses only the standard library.
+# These are for the production line (produce.py) and the tests.
+websocket-client>=1.8      # drives a headless Edge/Chrome over the DevTools protocol
+imageio-ffmpeg>=0.5        # ships an ffmpeg binary for the videos
+pytest>=8

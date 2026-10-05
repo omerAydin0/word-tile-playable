@@ -1,0 +1,18 @@
+{
+  "label": "Relax",
+  "hook": "No challenge and no tutorial: a calm board, and the hand only appears if the player waits.",
+  "brand": "WORD TILE DUEL",
+  "headline": "RELAX. FIND A WORD.",
+  "ctaLabel": "PLAY FREE",
+  "opponentName": "EMMA",
+  "theme": "lagoon",
+  "tutorial": false,
+  "hintIdle": 4,
+  "botSkill": 0.1,
+  "endTitles": {
+    "win": "NICELY DONE!",
+    "lose": "SO CLOSE!",
+    "tie": "IT'S A TIE!"
+  },
+  "endSubtitle": "More boards are waiting"
+}

@@ -1,0 +1,18 @@
+{
+  "label": "Two Words",
+  "hook": "A duel capped at two words each, so the viewer sees at once that the whole ad is short.",
+  "brand": "WORD TILE DUEL",
+  "headline": "TWO WORDS EACH. GO!",
+  "ctaLabel": "PLAY NOW",
+  "opponentName": "EMMA",
+  "theme": "beach",
+  "rounds": 2,
+  "tutorial": true,
+  "botSkill": 0.15,
+  "endTitles": {
+    "win": "QUICK WIN!",
+    "lose": "SO CLOSE!",
+    "tie": "IT'S A TIE!"
+  },
+  "endSubtitle": "A longer duel is waiting"
+}

@@ -1,0 +1,12 @@
+{
+  "label": "Instruction",
+  "hook": "No question and no challenge, only what to do, with nothing on screen until the viewer hesitates for two seconds and the hand shows the word.",
+  "brand": "WORD TILE DUEL",
+  "headline": "TAP LETTERS. SPELL A WORD.",
+  "ctaLabel": "PLAY FREE",
+  "opponentName": "EMMA",
+  "theme": "beach",
+  "tutorial": false,
+  "hintIdle": 2,
+  "botSkill": 0.15
+}
