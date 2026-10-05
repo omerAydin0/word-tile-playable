@@ -1,13 +1,12 @@
 # word-tile-playable
 
+<a href="https://omeraydin0.github.io/word-tile-playable/"><img src="docs/media/site.jpg" alt="The project page: the ad, playable in the browser, next to a short description"></a>
+
+**Live page: https://omeraydin0.github.io/word-tile-playable/** <br>
+Play the ad, switch between the six variants, watch the videos.
+
 A small production line for mobile game ad creatives. One short settings file goes in. A
 playable ad for four networks, twelve stills and a video come out, in under a minute.
-
-**Play the ad and watch the videos: https://omeraydin0.github.io/word-tile-playable/**
-
-<p align="center">
-<a href="https://omeraydin0.github.io/word-tile-playable/"><img src="docs/media/play.gif" width="270" alt="The first seconds of the ad"></a>
-</p>
 
 ## Why
 
@@ -21,6 +20,10 @@ costs that much, you only try a few. So I made trying one more idea cheap.
 
 ## One file in
 
+<table>
+<tr>
+<td valign="top">
+
 ```json
 {
   "label": "Comeback",
@@ -32,13 +35,20 @@ costs that much, you only try a few. So I made trying one more idea cheap.
 }
 ```
 
-Out comes, for that variant:
+Out, for that variant:
 
 - **4 playables**: Meta, Google, an MRAID build for AppLovin, Unity and ironSource, and a
   preview. If a file is too big for its network, the build fails.
 - **12 stills**: three moments of the ad, each in 9:16, 4:5, 1:1 and 1.91:1.
 - **1 video**: the ad played from start to finish, with sound.
 - **1 manifest**: what was made, from which settings, and how long it took.
+
+</td>
+<td align="center" width="270">
+<img src="docs/media/play.gif" width="250" alt="The first seconds of the ad, played by following the tutorial">
+</td>
+</tr>
+</table>
 
 <p align="center"><img src="docs/media/sizes.jpg" width="820" alt="One moment of one variant in four placement sizes"></p>
 
