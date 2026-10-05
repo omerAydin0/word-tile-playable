@@ -352,6 +352,8 @@ const Game = {
     if (!tile) return;
     this.drawing = true;
     const view = tile.view;
+    view.relabel();
+    MODEL.deck.forEach((t) => t.view.relabel());
     Sfx.flip();
     track('deck_draw', { by: player === 0 ? 'player' : 'opponent', letter: tile.ch, left: MODEL.deck.length });
     const h = homeOf(view);
@@ -399,11 +401,11 @@ const Game = {
 
   /**
    * A turn does not pass without a word. With no word to make the hand points at the
-   * deck; with the deck gone as well, the game is over.
+   * deck; when no deck tile would help either, the game is over.
    */
   checkStuck() {
-    if (this.phase !== 'player' || MODEL.anyWordLeft()) return false;
-    if (MODEL.deck.length) { Hint.schedule(0.8); return false; }
+    if (this.phase !== 'player' || MODEL.canPlay()) return false;
+    if (MODEL.deckCanHelp()) { Hint.schedule(0.8); return false; }
     MODEL.clearTray();
     settleAll(true);
     this.endReason = 'no_words';
@@ -422,10 +424,11 @@ const Game = {
     UI.scorebar.thinking(true);
     await wait(randRange(0.9, 1.3));
     // Her planned word while the game has kept to the plan; otherwise an everyday word she
-    // can see, drawing from the deck if there is none, and any word at all as a last resort.
+    // can see. With none she turns one deck tile over, if that would give her a word, and
+    // takes any word at all as a last resort.
     const step = MODEL.planned(1);
     let word = step ? step.word : MODEL.botWord(CFG.botSkill, rand);
-    while (!word && MODEL.deck.length) {
+    if (!word && MODEL.deckCanHelp()) {
       await this.drawTile(1);
       await wait(0.45);
       word = MODEL.botWord(CFG.botSkill, rand);
@@ -505,6 +508,18 @@ const Game = {
     UI.scorebar.setScore(player, MODEL.scores[player], true);
     UI.scorebar.setTilesLeft(MODEL.boardCount());
     this.showTray();
+    if (res.last) {
+      // the last tile on the board goes with the word
+      const v = res.last.view;
+      v.busy = true;
+      v.c.zIndex = Z_FLY;
+      if (v.look !== 'free') v.setLook('free');
+      v.flashOnce(color, 0.9);
+      gsap.to(v.c, { x: p.x, y: p.y, duration: 0.45, delay: 0.1, ease: 'power2.in' });
+      gsap.to(v.c.scale, { x: 0.22 * ks, y: 0.22 * ks, duration: 0.45, delay: 0.1, ease: 'power2.in' });
+      gsap.delayedCall(0.55, () => { v.c.visible = false; UI.fx.sparkle(p.x, p.y, color, 4, 70); Sfx.coin(n); });
+      await wait(0.6);
+    }
 
     // What the word uncovered turns face up.
     if (res.revealed.length) Sfx.flip();

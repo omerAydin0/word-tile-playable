@@ -91,6 +91,8 @@ async function boot() {
       seek: (seconds) => Clock.seek(seconds),
       /** Everything heard up to that second, as a WAV file in base64: the soundtrack of a video. */
       soundtrack: (seconds) => Sfx.render(seconds),
+      /** Sound off or on: for a page that shows the ad and has its own sound button. */
+      mute: (off) => Sfx.setMuted(!!off),
       /** Seeks, then returns the drawn canvas as a data URL: much faster than a browser screenshot. */
       async frame(seconds, type, quality) {
         const at = await Clock.seek(seconds);      // the canvas is read in the same task it was drawn in
@@ -137,7 +139,7 @@ async function boot() {
     }
     if (query.get('simulate')) {
       const report = {};
-      ['hint', 'casual', 'short'].forEach((policy) => { report[policy] = simulate(Number(query.get('simulate')), policy); });
+      (query.get('players') || 'hint,casual,short').split(',').forEach((policy) => { report[policy] = simulate(Number(query.get('simulate')), policy); });
       document.documentElement.setAttribute('data-simulation', JSON.stringify(report));
     }
   }
@@ -201,8 +203,12 @@ function simulate(games, policy) {
     const mine = () => {
       const step = m.planned(0);
       if (policy === 'hint') return step ? step : m.hintWord(null) && { word: m.hintWord(null) };
-      const options = m.playable(LEVEL.common);
+      // 'detour': a first word of their own, then whatever the hand shows
+      if (policy === 'detour' && m.moves[0] > 0) return m.hintWord(null) && { word: m.hintWord(null) };
+      let options = m.playable(LEVEL.common);
+      if (policy === 'detour') options = options.filter((w) => !step || w !== step.word);
       if (!options.length) return null;
+      if (policy === 'detour') return { word: options[Math.floor(rnd() * options.length)] };
       if (policy === 'casual') return { word: options[Math.floor(rnd() * options.length)] };
       return { word: options.reduce((a, b) => (m.pointsFor(b) < m.pointsFor(a) ? b : a)) };
     };
@@ -214,7 +220,7 @@ function simulate(games, policy) {
     };
     const play = (player, pick) => {
       let move = pick();
-      while (!move && m.deck.length) { m.draw(); move = pick(); }
+      if (!move && m.deckCanHelp()) { m.draw(); move = pick(); }
       if (!move && m.anyWord()) move = { word: m.anyWord() };
       if (!move) return false;
       (move.tiles || m.completion(move.word)).forEach((t) => m.lift(t));

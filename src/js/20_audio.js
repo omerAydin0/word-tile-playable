@@ -288,7 +288,8 @@ const Sfx = (() => {
     render,
     suspend() { if (ctx && ctx.state === 'running') ctx.suspend(); },
     resume() { if (ctx && !muted && ctx.state === 'suspended') ctx.resume(); },
-    setMuted(value) { muted = value; if (muted) this.suspend(); else this.resume(); },
+    /** Sound off or back on. Nothing starts here that the first touch has not started already. */
+    setMuted(value) { muted = value; if (muted) this.suspend(); else if (musicFrom !== null) this.resume(); },
   };
   Object.keys(sounds).forEach((name) => {
     api[name] = (...args) => {

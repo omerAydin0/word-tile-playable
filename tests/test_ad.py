@@ -76,6 +76,17 @@ def test_a_player_who_goes_their_own_way_still_gets_a_game(browser):
     assert next(e for e in events if e["event"] == "game_end")["reason"] in ("board_cleared", "no_words")
 
 
+def test_a_game_that_leaves_the_plan_still_ends_with_an_empty_board(browser):
+    # HATE instead of the planned HEART once ended with the opponent turning over the whole
+    # deck and one tile left on the board.
+    now, events = play(browser, "HATE,submit" + ",hint,submit" * 6, until_phase="end")
+    end = next(e for e in events if e["event"] == "game_end")
+    assert (end["reason"], end["tilesLeft"], end["result"]) == ("board_cleared", 0, "win")
+    draws = [e for e in events if e["event"] == "deck_draw"]
+    assert len(draws) <= 3          # a deck tile now and then, never the whole deck
+    assert not [e for e in events if e["event"] == "error"]
+
+
 def test_taking_a_tile_uncovers_what_is_under_it_and_putting_it_back_covers_it_again(browser):
     page = browser.open("duel.html?seed=3&clock=manual&tutorial=0", 360, 640, 1)
     look = """(() => { const m = __playable.model();
@@ -128,4 +139,5 @@ def test_simulated_outcomes_match_the_design(browser):
     assert hint["win"] == hint["games"] and hint["cleared"] == hint["games"]      # following the hand always wins
     assert (hint["you"], hint["opponent"]) == (70, 16)
     assert casual["win"] / casual["games"] > 0.8         # so, mostly, does any everyday word
+    assert casual["cleared"] / casual["games"] > 0.95    # and whatever they play, the board comes out empty
     assert short["win"] / short["games"] < casual["win"] / casual["games"]        # the least effort does worse

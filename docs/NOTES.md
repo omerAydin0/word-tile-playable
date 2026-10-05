@@ -68,7 +68,7 @@ tutorial shows and still loses, the ad has told them the game isn't for them.
 | The player… | Duel | Comeback | Relax |
 |---|---|---|---|
 | follows the tutorial | wins 100% | wins 100% | wins 100% |
-| plays any common word | wins 82.8% | wins 24.2% | wins 83% |
+| plays any common word | wins 82.2% | wins 24% | wins 82.4% |
 | does as little as possible | wins 0% | wins 0% | wins 0% |
 
 Comeback is the hard one. With the opponent 30 points ahead, a player who ignores the
@@ -95,6 +95,13 @@ and the way the opponent chooses her words are my guesses.
 The level is built backwards from a finished game, the way my other project,
 [word-tile-lab](https://github.com/omerAydin0/word-tile-lab), does it. That is how I can be
 sure a viewer who follows the tutorial always finishes the board.
+
+A viewer who spells their own words leaves that planned game, and a 30-second ad should
+not end stuck with letters nobody can use. So three things keep it moving. The opponent and
+the hint avoid words that would leave a dead end. A deck tile that is still face down
+becomes a letter that makes a word. And a single tile left on the board goes with the last
+word. The last two are my own, not taken from the real game. With them the board comes out
+empty in 98% of simulated games where the player ignores the hint completely.
 
 ## How it is put together
 

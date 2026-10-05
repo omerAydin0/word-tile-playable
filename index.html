@@ -30,7 +30,15 @@ section{padding:54px 0;border-top:1px solid var(--line)}
 .btn{display:inline-block;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:2px solid var(--blue);color:var(--blue)}
 .btn.main{background:var(--blue);color:#fff}
 .btn:focus-visible,.chip:focus-visible,a:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
-.phone{width:min(100%,320px);aspect-ratio:9/18.5;margin:0 auto;border-radius:34px;border:9px solid #0a1634;background:#0a1634;overflow:hidden;box-shadow:0 24px 50px rgba(11,44,102,.28)}
+.stage{position:relative;width:min(100%,320px);margin:0 auto}
+.sound{position:absolute;top:10px;left:calc(100% + 12px);width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:var(--deep);cursor:pointer;display:grid;place-items:center;padding:0}
+.sound:hover{border-color:var(--blue)}
+.sound:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.sound svg{width:22px;height:22px}
+.sound .off,.sound[aria-pressed=true] .on{display:none}
+.sound[aria-pressed=true] .off{display:block}
+.sound[aria-pressed=true]{color:var(--soft)}
+.phone{width:100%;aspect-ratio:9/18.5;margin:0 auto;border-radius:34px;border:9px solid #0a1634;background:#0a1634;overflow:hidden;box-shadow:0 24px 50px rgba(11,44,102,.28)}
 .phone iframe{width:100%;height:100%;border:0;display:block}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 8px}
 .chip{font:inherit;font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
@@ -79,6 +87,10 @@ footer a{font-weight:600}
   .checks{grid-template-columns:1fr}
   section{padding:40px 0}
 }
+@media (max-width:520px){
+  .stage{margin-top:54px}
+  .sound{left:auto;right:4px;top:-52px}
+}
 @media (max-width:460px){
   .outs{grid-template-columns:1fr}
   .caught{grid-template-columns:96px minmax(0,1fr)}
@@ -105,7 +117,13 @@ footer a{font-weight:600}
     </div>
   </div>
   <div id="play">
-    <div class="phone"><iframe id="ad" title="The playable ad" src="dist/duel.html" allow="autoplay"></iframe></div>
+    <div class="stage">
+      <div class="phone"><iframe id="ad" title="The playable ad" src="dist/duel.html" allow="autoplay"></iframe></div>
+      <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Turn the ad's sound off" title="Sound">
+        <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg>
+      </button>
+    </div>
     <div class="chips" id="chips"></div>
     <p class="caption" id="caption"></p>
     <p class="caption"><a id="full" href="dist/duel.html">Open it full screen</a> · sound starts on the first tap</p>
@@ -171,13 +189,13 @@ footer a{font-weight:600}
     <div class="num"><b>&lt; 1 min</b><span>to produce one variant</span></div>
     <div class="num"><b>102</b><span>files in a batch of six</span></div>
     <div class="num"><b>23</b><span>screen sizes checked</span></div>
-    <div class="num"><b>85</b><span>automated tests</span></div>
+    <div class="num"><b>86</b><span>automated tests</span></div>
   </div>
   <div class="tablewrap">
   <table>
     <tr><th>Share of games won by a player who…</th><th>Duel</th><th>Comeback</th><th>Relax</th></tr>
     <tr><td>follows the tutorial</td><td>100%</td><td>100%</td><td>100%</td></tr>
-    <tr><td>plays any common word</td><td>83%</td><td>24%</td><td>83%</td></tr>
+    <tr><td>plays any common word</td><td>82%</td><td>24%</td><td>82%</td></tr>
     <tr><td>does as little as possible</td><td>0%</td><td>0%</td><td>0%</td></tr>
   </table>
   </div>
@@ -227,6 +245,25 @@ VARIANTS.forEach((v) => {
 });
 caption.innerHTML = '<b>' + VARIANTS[0].headline + '</b><br>' + VARIANTS[0].idea;
 chips.firstChild.setAttribute('aria-pressed', 'true');
+
+// The sound button sits outside the ad and reaches into it.
+const sound = document.getElementById('sound');
+let soundOff = false;
+function applySound(tries) {
+  try {
+    ad.contentWindow.__playable.mute(soundOff);
+  } catch (e) {
+    // the ad is still starting: try again shortly
+    if ((tries || 0) < 40) setTimeout(() => applySound((tries || 0) + 1), 150);
+  }
+}
+sound.addEventListener('click', () => {
+  soundOff = !soundOff;
+  sound.setAttribute('aria-pressed', String(soundOff));
+  sound.setAttribute('aria-label', soundOff ? "Turn the ad's sound on" : "Turn the ad's sound off");
+  applySound();
+});
+ad.addEventListener('load', () => applySound());
 
 const videos = document.getElementById('videos');
 VARIANTS.forEach((v) => {

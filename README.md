@@ -116,9 +116,9 @@ From the last batch, on my laptop:
 | 3,000 simulated games | 2 |
 | 12 stills | 3 |
 | video with sound | 22 |
-| **total** | **28** |
+| **total** | **29** |
 
-The six took between 24 and 51 seconds each. Writing three variants takes the agent about
+The six took between 24 and 29 seconds each. Writing three variants takes the agent about
 half a minute, and so does one review.
 
 ## What is missing
@@ -141,7 +141,7 @@ python build.py              # the ads, into dist/
 python produce.py            # every variant, into creatives/
 python tools/variants.py     # only check the settings files
 python tools/screens.py      # only check the screen sizes
-python -m pytest -q          # 85 tests
+python -m pytest -q          # 86 tests
 ```
 
 The game in the ad is modelled on Word Tiles GO. The name, the art and the music are mine.

@@ -24,19 +24,19 @@
   "playables": {
     "preview": {
       "file": "playable/preview.html",
-      "kb": 1056
+      "kb": 1064
     },
     "facebook": {
       "file": "playable/facebook.html",
-      "kb": 1056
+      "kb": 1064
     },
     "google": {
       "file": "playable/google.zip",
-      "kb": 320
+      "kb": 322
     },
     "mraid": {
       "file": "playable/mraid.html",
-      "kb": 1056
+      "kb": 1064
     }
   },
   "stills": [
@@ -57,7 +57,7 @@
     "file": "video.mp4",
     "seconds": 26.1,
     "frames": 784,
-    "kb": 2915
+    "kb": 2914
   },
   "script": "follow",
   "moments": {
@@ -83,9 +83,9 @@
       "words": 4
     },
     "casual": {
-      "win": 0.827,
-      "tie": 0.063,
-      "lose": 0.11,
+      "win": 0.823,
+      "tie": 0.056,
+      "lose": 0.121,
       "cleared": 0.0,
       "you": 29,
       "opponent": 20,
@@ -102,10 +102,10 @@
     }
   },
   "seconds": {
-    "playable": 1.92,
-    "simulation": 1.48,
-    "stills": 2.66,
-    "video": 17.65,
-    "total": 23.71
+    "playable": 1.95,
+    "simulation": 1.81,
+    "stills": 2.61,
+    "video": 18.02,
+    "total": 24.39
   }
 }

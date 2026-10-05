@@ -2540,13 +2540,17 @@ function track(event, data) {
 // Every letter has a value, and a word scores the sum of its letters times (length - 1).
 //
 // A turn only ends with a word: nobody passes. The game is over when the board is empty,
-// or when no word is left to make and nothing is left to draw.
+// or when no word is left to make and no deck tile would change that.
+//
+// A short game should end with the board empty, not stuck. So the opponent, the hand and
+// the deck all look one move ahead and avoid leaving letters that spell nothing.
 //
 // The level also carries a planned game: a word for the player, one for the opponent, and
 // so on, which together use every tile. While both keep to it the board comes out empty.
 
 const MIN_WORD = 3;
 const MAX_WORD = 9;
+const LOOKAHEAD = 10;          // with this many tiles or fewer left, a word is judged by what it leaves
 
 /** Words are shipped as "shared-prefix digit + the rest", sorted: see tools/build_level.py. */
 function decodeWords(packed) {
@@ -2569,6 +2573,7 @@ function createModel(level, cfg) {
   const words = new Set(wordList);
   const common = level.common;
   const hints = level.hints || level.common;
+  const LETTERS = Array.from(new Set(common.join(''))).sort();     // the letters everyday words here are made of
   const values = level.values;
 
   const tiles = level.tiles.map(([x, y, z, ch], i) => (
@@ -2658,7 +2663,38 @@ function createModel(level, cfg) {
     const t = deck.shift();
     t.where = 'waste';
     waste.push(t);
+    dealUseful(t);
     return t;
+  }
+
+  /**
+   * The deck lies face down, so nobody has seen its letters. The tile that comes up keeps
+   * its letter when that makes a good word; otherwise it becomes the letter that does: a
+   * word where there was none, or one that does not leave the board stuck.
+   */
+  function dealUseful(t) {
+    withTrayBack(() => {
+      // the best everyday word the open letter allows: what it leaves first, then its length
+      const worth = () => {
+        const by = freeByLetter();
+        let best = -1;
+        common.forEach((w) => {
+          const picks = completion(w, by, true);
+          if (picks) best = Math.max(best, leaves(picks, true) * 10 + w.length);
+        });
+        return best;
+      };
+      const mine = t.ch;
+      let most = worth();
+      let better = mine;
+      LETTERS.forEach((ch) => {
+        if (ch === mine) return;
+        t.ch = ch;
+        const n = worth();
+        if (Math.floor(n / 10) > Math.floor(most / 10)) { most = n; better = ch; }
+      });
+      t.ch = better;
+    });
   }
 
   /** Plays the tray. Returns what changed so the view can animate it. */
@@ -2680,7 +2716,11 @@ function createModel(level, cfg) {
     onPlan = onPlan && !!step && step.by === player && step.tiles.length === used.length
       && step.tiles.every((t, i) => t === used[i]);
     if (onPlan) planIndex += 1;
-    return { word, points, tiles: used, revealed: wasCovered.filter(isFree) };
+    // One tile cannot make a word, so the last one on the board goes with the word that left it.
+    const rest = onBoard();
+    const last = rest.length === 1 ? rest[0] : null;
+    if (last) last.where = 'gone';
+    return { word, points, tiles: used, revealed: wasCovered.filter((t) => t !== last && isFree(t)), last };
   }
 
   /** The planned word for this player, while the game has kept to the plan; else null. */
@@ -2704,9 +2744,10 @@ function createModel(level, cfg) {
   /**
    * Tiles that would finish `word` after what is already in the tray, in order, or null.
    * Board tiles first; the open deck tile fills at most one missing letter.
+   * `fresh` asks the same of an empty tray.
    */
-  function completion(word, by) {
-    const prefix = trayWord();
+  function completion(word, by, fresh) {
+    const prefix = fresh ? '' : trayWord();
     if (word.length > MAX_WORD || word.length <= prefix.length || !word.startsWith(prefix)) return null;
     const free = by || freeByLetter();
     const taken = {};
@@ -2726,13 +2767,137 @@ function createModel(level, cfg) {
         return null;
       }
     }
-    const usesBoard = tray.some((t) => !t.fromDeck) || out.some((t) => !t.fromDeck);
+    const usesBoard = (!fresh && tray.some((t) => !t.fromDeck)) || out.some((t) => !t.fromDeck);
     return usesBoard ? out : null;
   }
 
   function playable(list) {
     const by = freeByLetter();
     return list.filter((w) => completion(w, by) !== null);
+  }
+
+  // ---- one move ahead
+
+  /** Runs `fn` as if the tray had been put back: half a word in the tray should not count. */
+  function withTrayBack(fn) {
+    const held = tray.slice();
+    held.forEach((t) => { t.where = t.fromDeck ? 'waste' : 'board'; });
+    try {
+      return fn();
+    } finally {
+      held.forEach((t) => { t.where = 'tray'; });
+    }
+  }
+
+  /** The open deck tile's letter if it is there to be used, and how many tiles lie under the fan. */
+  function deckNow() {
+    const open = openTile();
+    return { open: open && open.where === 'waste' ? open.ch : '', hidden: deck.length };
+  }
+
+  /**
+   * Tiles for `word` out of these free ones, borrowing at most one letter from the deck:
+   * the open tile's, or any letter at all if a tile is still face down. Null if it cannot
+   * be made; else { picks, drew } where `drew` says a face-down tile was needed.
+   */
+  function fit(word, by, from) {
+    const taken = {};
+    const picks = [];
+    let borrowed = false;
+    let drew = false;
+    for (let i = 0; i < word.length; i++) {
+      const ch = word[i];
+      const n = taken[ch] || 0;
+      if (by[ch] && n < by[ch].length) {
+        picks.push(by[ch][n]);
+        taken[ch] = n + 1;
+      } else if (!borrowed && (from.open === ch || from.hidden > 0)) {
+        borrowed = true;
+        drew = from.open !== ch;
+      } else {
+        return null;
+      }
+    }
+    return picks.length ? { picks, drew } : null;
+  }
+
+  const clearedBefore = new Map();
+
+  /**
+   * Can everything still on the board be taken, word by word, in everyday words? The
+   * answer for a given board and deck never changes, so it is kept.
+   */
+  function clearable(from) {
+    const rest = tiles.filter((t) => !t.fromDeck && t.where === 'board');
+    if (rest.length <= 1) return true;
+    const key = rest.map((t) => t.id).join(',') + '|' + from.open + from.hidden;
+    if (clearedBefore.has(key)) return clearedBefore.get(key);
+    const by = freeByLetter();
+    let ok = false;
+    for (let k = 0; k < common.length && !ok; k++) {
+      const made = fit(common[k], by, from);
+      if (!made) continue;
+      // a drawn tile covers the open one; a used open tile is gone
+      const next = made.drew ? { open: '', hidden: from.hidden - 1 }
+        : { open: made.picks.length < common[k].length ? '' : from.open, hidden: from.hidden };
+      made.picks.forEach((t) => { t.where = 'gone'; });
+      ok = clearable(next);
+      made.picks.forEach((t) => { t.where = 'board'; });
+    }
+    clearedBefore.set(key, ok);
+    return ok;
+  }
+
+  /**
+   * What playing these tiles would leave behind: 3 an empty board (a single tile left
+   * goes with the word), 2 a board that can still be emptied (or one too full to tell),
+   * 1 a board with another word in it but no way to empty it, 0 letters that spell nothing.
+   */
+  function leaves(picks, fresh) {
+    const going = fresh ? picks : tray.concat(picks);
+    const left = onBoard().length - going.filter((t) => !t.fromDeck).length;
+    if (left <= 1) return 3;
+    if (left > LOOKAHEAD) return 2;
+    const was = going.map((t) => t.where);
+    going.forEach((t) => { t.where = 'gone'; });
+    const from = deckNow();
+    let mark = 2;
+    if (!clearable(from)) {
+      const by = freeByLetter();
+      mark = wordList.some((w) => fit(w, by, from)) ? 1 : 0;
+    }
+    going.forEach((t, i) => { t.where = was[i]; });
+    return mark;
+  }
+
+  /**
+   * Of these words, the ones that leave the best board behind. With `anyGood`, every word
+   * that leaves a board that can still be emptied will do, not only those that empty it.
+   */
+  function keepGoing(list, anyGood) {
+    if (onBoard().length - MAX_WORD > LOOKAHEAD) return list;
+    const by = freeByLetter();
+    const marks = list.map((w) => leaves(completion(w, by)));
+    let top = Math.max.apply(null, marks);
+    if (anyGood) top = Math.min(top, 2);
+    return list.filter((w, i) => marks[i] >= top);
+  }
+
+  /** Is there a word to make right now, tray put back? */
+  function canPlay() {
+    return withTrayBack(() => {
+      const by = freeByLetter();
+      return wordList.some((w) => completion(w, by, true) !== null);
+    });
+  }
+
+  /** Would turning a deck tile over make an everyday word possible? */
+  function deckCanHelp() {
+    if (!deck.length) return false;
+    return withTrayBack(() => {
+      const by = freeByLetter();
+      return common.some((w) => fit(w, by, { open: '', hidden: 1 }));
+    });
   }
 
   function anyWordLeft() {
@@ -2744,11 +2909,19 @@ function createModel(level, cfg) {
   function hintWord(preferred) {
     if (preferred && completion(preferred)) return preferred;
     const rank = (w) => ({ 5: 0, 4: 1, 6: 2 }[w.length]);
-    let best = null;
-    playable(hints).forEach((w) => {
-      if (best === null || rank(w) < rank(best)) best = w;
-    });
-    return best || playable(common)[0] || anyWord();
+    const pick = (list) => {
+      let best = null;
+      keepGoing(playable(list)).forEach((w) => {
+        if (best === null || rank(w) < rank(best)) best = w;
+      });
+      return best;
+    };
+    // an everyday five-letter word, unless a plainer one is the one that keeps the game going
+    const nice = pick(hints);
+    const plain = pick(common);
+    if (nice && plain && leaves(completion(plain)) > leaves(completion(nice))) return plain;
+    // with no everyday word in sight the deck is the better advice, if it has one to give
+    return nice || plain || (deckCanHelp() ? null : anyWord());
   }
 
   /** Any accepted word that can be made right now, the shortest there is; null if none. */
@@ -2768,6 +2941,7 @@ function createModel(level, cfg) {
   function botWord(skill, rnd) {
     let options = playable(common);
     if (!options.length) return null;
+    options = keepGoing(options, true);     // she is in no hurry to end it: that leaves room to stay behind
     // An ad should be winnable by anyone who plays along: with `botMercy` the opponent
     // only takes words that leave it behind the player, or its cheapest word if none does.
     if (cfg.botMercy) {
@@ -2802,6 +2976,7 @@ function createModel(level, cfg) {
     tiles, tray, deck, waste, scores, moves,
     stateOf, canLift, lift, drop, clearTray, draw, submit, planned,
     openTile, trayWord, trayValid, completion, playable, anyWordLeft, anyWord, hintWord, botWord,
+    canPlay, deckCanHelp,
     pointsFor, multiplier,
     valueOf: (ch) => values[ch] || 1,
     boardCount: () => onBoard().length,
@@ -3101,7 +3276,8 @@ const Sfx = (() => {
     render,
     suspend() { if (ctx && ctx.state === 'running') ctx.suspend(); },
     resume() { if (ctx && !muted && ctx.state === 'suspended') ctx.resume(); },
-    setMuted(value) { muted = value; if (muted) this.suspend(); else this.resume(); },
+    /** Sound off or back on. Nothing starts here that the first touch has not started already. */
+    setMuted(value) { muted = value; if (muted) this.suspend(); else if (musicFrom !== null) this.resume(); },
   };
   Object.keys(sounds).forEach((name) => {
     api[name] = (...args) => {
@@ -3892,6 +4068,13 @@ class TileView {
     this.c.hitArea = new Rectangle(-TILE_W / 2, -TILE_FACE_H / 2, TILE_W, TILE_H);
     this.c.on('pointerdown', (e) => { e.stopPropagation(); Game.onTile(this); });
     this.c.alpha = 0;                  // dealt in by the intro
+  }
+
+  /** A deck tile can change its letter while it still lies face down. */
+  relabel() {
+    if (this.text.text === this.m.ch) return;
+    this.text.text = this.m.ch;
+    this.value.text = String(MODEL.valueOf(this.m.ch));
   }
 
   /** 'free' (face up) | 'back' (face down) */
@@ -4783,6 +4966,8 @@ const Game = {
     if (!tile) return;
     this.drawing = true;
     const view = tile.view;
+    view.relabel();
+    MODEL.deck.forEach((t) => t.view.relabel());
     Sfx.flip();
     track('deck_draw', { by: player === 0 ? 'player' : 'opponent', letter: tile.ch, left: MODEL.deck.length });
     const h = homeOf(view);
@@ -4830,11 +5015,11 @@ const Game = {
 
   /**
    * A turn does not pass without a word. With no word to make the hand points at the
-   * deck; with the deck gone as well, the game is over.
+   * deck; when no deck tile would help either, the game is over.
    */
   checkStuck() {
-    if (this.phase !== 'player' || MODEL.anyWordLeft()) return false;
-    if (MODEL.deck.length) { Hint.schedule(0.8); return false; }
+    if (this.phase !== 'player' || MODEL.canPlay()) return false;
+    if (MODEL.deckCanHelp()) { Hint.schedule(0.8); return false; }
     MODEL.clearTray();
     settleAll(true);
     this.endReason = 'no_words';
@@ -4853,10 +5038,11 @@ const Game = {
     UI.scorebar.thinking(true);
     await wait(randRange(0.9, 1.3));
     // Her planned word while the game has kept to the plan; otherwise an everyday word she
-    // can see, drawing from the deck if there is none, and any word at all as a last resort.
+    // can see. With none she turns one deck tile over, if that would give her a word, and
+    // takes any word at all as a last resort.
     const step = MODEL.planned(1);
     let word = step ? step.word : MODEL.botWord(CFG.botSkill, rand);
-    while (!word && MODEL.deck.length) {
+    if (!word && MODEL.deckCanHelp()) {
       await this.drawTile(1);
       await wait(0.45);
       word = MODEL.botWord(CFG.botSkill, rand);
@@ -4936,6 +5122,18 @@ const Game = {
     UI.scorebar.setScore(player, MODEL.scores[player], true);
     UI.scorebar.setTilesLeft(MODEL.boardCount());
     this.showTray();
+    if (res.last) {
+      // the last tile on the board goes with the word
+      const v = res.last.view;
+      v.busy = true;
+      v.c.zIndex = Z_FLY;
+      if (v.look !== 'free') v.setLook('free');
+      v.flashOnce(color, 0.9);
+      gsap.to(v.c, { x: p.x, y: p.y, duration: 0.45, delay: 0.1, ease: 'power2.in' });
+      gsap.to(v.c.scale, { x: 0.22 * ks, y: 0.22 * ks, duration: 0.45, delay: 0.1, ease: 'power2.in' });
+      gsap.delayedCall(0.55, () => { v.c.visible = false; UI.fx.sparkle(p.x, p.y, color, 4, 70); Sfx.coin(n); });
+      await wait(0.6);
+    }
 
     // What the word uncovered turns face up.
     if (res.revealed.length) Sfx.flip();
@@ -5271,6 +5469,8 @@ async function boot() {
       seek: (seconds) => Clock.seek(seconds),
       /** Everything heard up to that second, as a WAV file in base64: the soundtrack of a video. */
       soundtrack: (seconds) => Sfx.render(seconds),
+      /** Sound off or on: for a page that shows the ad and has its own sound button. */
+      mute: (off) => Sfx.setMuted(!!off),
       /** Seeks, then returns the drawn canvas as a data URL: much faster than a browser screenshot. */
       async frame(seconds, type, quality) {
         const at = await Clock.seek(seconds);      // the canvas is read in the same task it was drawn in
@@ -5317,7 +5517,7 @@ async function boot() {
     }
     if (query.get('simulate')) {
       const report = {};
-      ['hint', 'casual', 'short'].forEach((policy) => { report[policy] = simulate(Number(query.get('simulate')), policy); });
+      (query.get('players') || 'hint,casual,short').split(',').forEach((policy) => { report[policy] = simulate(Number(query.get('simulate')), policy); });
       document.documentElement.setAttribute('data-simulation', JSON.stringify(report));
     }
   }
@@ -5381,8 +5581,12 @@ function simulate(games, policy) {
     const mine = () => {
       const step = m.planned(0);
       if (policy === 'hint') return step ? step : m.hintWord(null) && { word: m.hintWord(null) };
-      const options = m.playable(LEVEL.common);
+      // 'detour': a first word of their own, then whatever the hand shows
+      if (policy === 'detour' && m.moves[0] > 0) return m.hintWord(null) && { word: m.hintWord(null) };
+      let options = m.playable(LEVEL.common);
+      if (policy === 'detour') options = options.filter((w) => !step || w !== step.word);
       if (!options.length) return null;
+      if (policy === 'detour') return { word: options[Math.floor(rnd() * options.length)] };
       if (policy === 'casual') return { word: options[Math.floor(rnd() * options.length)] };
       return { word: options.reduce((a, b) => (m.pointsFor(b) < m.pointsFor(a) ? b : a)) };
     };
@@ -5394,7 +5598,7 @@ function simulate(games, policy) {
     };
     const play = (player, pick) => {
       let move = pick();
-      while (!move && m.deck.length) { m.draw(); move = pick(); }
+      if (!move && m.deckCanHelp()) { m.draw(); move = pick(); }
       if (!move && m.anyWord()) move = { word: m.anyWord() };
       if (!move) return false;
       (move.tiles || m.completion(move.word)).forEach((t) => m.lift(t));

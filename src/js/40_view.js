@@ -101,6 +101,13 @@ class TileView {
     this.c.alpha = 0;                  // dealt in by the intro
   }
 
+  /** A deck tile can change its letter while it still lies face down. */
+  relabel() {
+    if (this.text.text === this.m.ch) return;
+    this.text.text = this.m.ch;
+    this.value.text = String(MODEL.valueOf(this.m.ch));
+  }
+
   /** 'free' (face up) | 'back' (face down) */
   setLook(look) {
     if (look === this.look) return;
