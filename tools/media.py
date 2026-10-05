@@ -46,11 +46,11 @@ def main() -> None:
         Image.open(CREATIVES / n / "stills" / "hook-9x16.jpg").resize((360, 640), Image.LANCZOS).save(
             OUT / "posters" / f"{n}.jpg", quality=82)
 
-    # The loop: from the deal to the opponent's answer.
+    # The loop: from the dealt board to the opponent's answer. It skips the deal so the first frame is not an empty beach.
     moments = json.loads((CREATIVES / "duel" / "manifest.json").read_text(encoding="utf-8"))["moments"]
     seconds = min(16.0, moments["word"] + 8.5)
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
-    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-t", f"{seconds:.1f}", "-i", str(CREATIVES / "duel" / "video.mp4"),
+    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-ss", "1.8", "-t", f"{seconds - 1.8:.1f}", "-i", str(CREATIVES / "duel" / "video.mp4"),
                     "-vf", "fps=12,scale=300:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4",
                     "-loop", "0", str(OUT / "play.gif")], check=True)
     for file in sorted(OUT.rglob("*")):
