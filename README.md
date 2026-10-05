@@ -1,9 +1,12 @@
 # word-tile-playable
 
-<a href="https://omeraydin0.github.io/word-tile-playable/"><img src="docs/media/site.jpg" alt="The project page: the ad, playable in the browser, next to a short description"></a>
+> **I recommend looking at this project on its own page, not here:**
+> **https://omeraydin0.github.io/word-tile-playable/**
+>
+> You can play the ad there, switch between the six variants and watch the videos. GitHub
+> can show none of that, so this README is only a summary.
 
-**Live page: https://omeraydin0.github.io/word-tile-playable/** <br>
-Play the ad, switch between the six variants, watch the videos.
+<a href="https://omeraydin0.github.io/word-tile-playable/"><img src="docs/media/site.jpg" alt="The project page: the ad, playable in the browser, next to a short description"></a>
 
 A small production line for mobile game ad creatives. One short settings file goes in. A
 playable ad for four networks, twelve stills and a video come out, in under a minute.
