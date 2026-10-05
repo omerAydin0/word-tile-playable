@@ -346,7 +346,6 @@ class TrayPanel {
       this.c.addChild(s);
     }
     this.frame = new Graphics();
-    this.hintText = label('TAP TILES TO SPELL A WORD', 27, 0xffffff, { letterSpacing: 1, dropShadow: SHADOW });
     this.chip = new Container();
     this.chipBack = new Graphics();
     this.chipText = label('', 25, 0xffffff, { stroke: { color: 0x0b2c66, width: 4, join: 'round' } });
@@ -354,7 +353,7 @@ class TrayPanel {
     this.chip.addChild(this.chipBack, this.chipText);
     this.chip.scale.set(0);
     // the tab sits behind the frame's top edge, so it reads as part of it
-    this.c.addChild(this.chip, this.frame, this.hintText);
+    this.c.addChild(this.chip, this.frame);
     this.key = '';
   }
 
@@ -367,7 +366,6 @@ class TrayPanel {
     const key = count + '|' + mult + '|' + valid;
     if (key === this.key) return;
     this.key = key;
-    gsap.to(this.hintText, { alpha: count ? 0 : 1, duration: 0.2 });
     const g = this.frame;
     g.clear();
     const left = -(SLOTS / 2) * SLOT_PITCH - 3;

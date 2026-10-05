@@ -57,7 +57,7 @@
     "file": "video.mp4",
     "seconds": 26.1,
     "frames": 784,
-    "kb": 2939
+    "kb": 2915
   },
   "script": "follow",
   "moments": {
@@ -102,10 +102,10 @@
     }
   },
   "seconds": {
-    "playable": 1.96,
+    "playable": 1.92,
     "simulation": 1.48,
-    "stills": 2.62,
-    "video": 17.42,
-    "total": 23.48
+    "stills": 2.66,
+    "video": 17.65,
+    "total": 23.71
   }
 }

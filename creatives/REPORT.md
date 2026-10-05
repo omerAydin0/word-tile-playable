@@ -9,9 +9,9 @@ this batch tests what the viewer sees and does first.
 
 | Variant | Headline | The idea | Verdict | Wins following the hand | Wins with any everyday word | Seconds to produce |
 |---|---|---|---|---|---|---|
-| `two-words` | TWO WORDS EACH. GO! | A duel capped at two words each, so the viewer sees at once that the whole ad is short. | PASS | 100% | 82.7% | 23 |
-| `instruction` | TAP LETTERS. SPELL A WORD. | No question and no challenge, only what to do; no hand until the viewer has waited two seconds. | PASS | 100% | 82.8% | 29 |
-| `night` | LIGHTS OUT. WORDS ON. | A dark shore, to stand out in a bright feed; the same duel as Duel. | PASS | 100% | 82.8% | 27 |
+| `two-words` | TWO WORDS EACH. GO! | A duel capped at two words each, so the viewer sees at once that the whole ad is short. | PASS | 100% | 82.7% | 24 |
+| `instruction` | TAP LETTERS. SPELL A WORD. | No question and no challenge, only what to do; no hand until the viewer has waited two seconds. | PASS | 100% | 82.8% | 24 |
+| `night` | LIGHTS OUT. WORDS ON. | A dark shore, to stand out in a bright feed; the same duel as Duel. | PASS | 100% | 82.8% | 25 |
 
 Each has four playables, twelve stills and a video. The numbers are from each variant's
 `manifest.json`; the verdicts are in its `review.md`, shortened from what the reviewer

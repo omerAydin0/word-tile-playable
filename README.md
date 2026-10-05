@@ -118,7 +118,7 @@ From the last batch, on my laptop:
 | video with sound | 22 |
 | **total** | **28** |
 
-The six took between 23 and 29 seconds each. Writing three variants takes the agent about
+The six took between 24 and 51 seconds each. Writing three variants takes the agent about
 half a minute, and so does one review.
 
 ## What is missing
